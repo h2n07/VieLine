@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="en" data-lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VieLine · Handlebar navigation you build yourself</title>
+<meta name="description" content="A round, glanceable turn-by-turn display for motorbikes. Build it from 12 parts, flash it from your browser, pair it with Android.">
+<meta name="vl-title-en" content="VieLine · Handlebar navigation you build yourself">
+<meta name="vl-title-vi" content="VieLine · Thiết bị dẫn đường gắn ghi-đông tự làm">
+<meta name="vl-desc-en" content="A round, glanceable turn-by-turn display for motorbikes. Build it from 12 parts, flash it from your browser, pair it with Android.">
+<meta name="vl-desc-vi" content="Màn hình dẫn đường tròn gắn ghi-đông xe máy. Tự làm từ 12 linh kiện, nạp firmware ngay trên trình duyệt, kết nối điện thoại Android.">
+<meta name="theme-color" content="#07090c">
+<meta property="og:type" content="website">
+<meta property="og:title" content="VieLine · Handlebar navigation you build yourself">
+<meta property="og:description" content="A round, glanceable turn-by-turn display for motorbikes. 12 parts, browser flashing, Android app.">
+<meta property="og:image" content="https://h2n07.github.io/VieLine/assets/img/og.png">
+<meta property="og:url" content="https://h2n07.github.io/VieLine/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+<script>
+  // chọn ngôn ngữ trước khi vẽ trang: ?lang= → lựa chọn đã lưu → ngôn ngữ trình duyệt
+  (function () {
+    var l = new URLSearchParams(location.search).get('lang');
+    try { l = l || localStorage.getItem('vl-lang'); } catch (e) {}
+    l = l || ((navigator.languages || [navigator.language || 'en'])[0].toLowerCase().indexOf('vi') === 0 ? 'vi' : 'en');
+    if (l !== 'vi') l = 'en';
+    document.documentElement.dataset.lang = l; document.documentElement.lang = l;
+  })();
+</script>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="VieLine">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="none" stroke="#2fd5a4" stroke-width="3"/><path d="M16 7.5 23 23l-7-3.6L9 23z" fill="currentColor"/></svg>
+      <span>Vie<b>Line</b></span>
+    </a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="#screens"><span data-l="en">Product</span><span data-l="vi">Sản phẩm</span></a>
+      <a href="#modes"><span data-l="en">Navigation</span><span data-l="vi">Dẫn đường</span></a>
+      <a href="#hardware"><span data-l="en">Hardware</span><span data-l="vi">Phần cứng</span></a>
+      <a href="#app">App</a>
+      <a href="#start"><span data-l="en">Get started</span><span data-l="vi">Bắt đầu</span></a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="nav-right">
+      <div class="lang" role="group" aria-label="Language / Ngôn ngữ">
+        <button type="button" data-set="en" aria-pressed="true">EN</button>
+        <button type="button" data-set="vi" aria-pressed="false">VI</button>
+      </div>
+      <a class="icon-btn" href="https://github.com/h2n07/VieLine" aria-label="GitHub">
+        <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+      </a>
+      <a class="btn btn-primary btn-sm" href="flash/"><span data-l="en">Flash firmware</span><span data-l="vi">Nạp firmware</span></a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <div class="pill"><b>v0.1.0</b>
+        <span data-l="en">Public preview · hardware validation in progress</span>
+        <span data-l="vi">Bản xem trước · đang thử trên phần cứng thật</span>
+      </div>
+      <h1>
+        <span data-l="en">Navigation on your handlebars. <em>Eyes on the road.</em></span>
+        <span data-l="vi">Dẫn đường trên ghi-đông. <em>Mắt vẫn nhìn đường.</em></span>
+      </h1>
+      <p class="lede">
+        <span data-l="en">VieLine is a round, glanceable turn-by-turn display for motorbikes that you build yourself. Your Android phone stays in your pocket, works out the route, and sends one clear arrow to the handlebars over Bluetooth.</span>
+        <span data-l="vi">VieLine là màn hình dẫn đường tròn gắn ghi-đông xe máy mà bạn tự làm được. Điện thoại Android nằm yên trong túi lo phần tìm đường, rồi gửi lên ghi-đông một mũi tên rõ ràng qua Bluetooth.</span>
+      </p>
+      <div class="cta">
+        <a class="btn btn-primary" href="flash/">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>
+          <span data-l="en">Flash in your browser</span><span data-l="vi">Nạp firmware trên trình duyệt</span>
+        </a>
+        <a class="btn btn-ghost" href="https://github.com/h2n07/VieLine/releases/download/v0.1.0/VieLine-0.1.0.apk">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M5 21h14"/></svg>
+          <span data-l="en">Android app</span><span data-l="vi">Tải app Android</span>
+        </a>
+      </div>
+      <p class="hero-note">
+        <span data-l="en">Free for personal, non-commercial use · Android 8.0+ · Chrome or Edge to flash</span>
+        <span data-l="vi">Miễn phí cho cá nhân, phi thương mại · Android 8.0 trở lên · Nạp bằng Chrome hoặc Edge</span>
+      </p>
+    </div>
+    <div class="hero-art">
+      <img src="assets/img/hero.webp" width="1000" height="1000" alt="VieLine device showing a right-turn arrow, 350 m, Hai Bà Trưng" fetchpriority="high">
+    </div>
+  </div>
+  <div class="stats">
+    <div class="wrap">
+      <div class="stat"><div class="v">1.28″ IPS</div><div class="k"><span data-l="en">Round, 240 × 240</span><span data-l="vi">Màn tròn 240 × 240</span></div></div>
+      <div class="stat"><div class="v"><span data-l="en">12 parts</span><span data-l="vi">12 linh kiện</span></div><div class="k"><span data-l="en">All from one shop</span><span data-l="vi">Mua ở một cửa hàng</span></div></div>
+      <div class="stat"><div class="v"><span data-l="en">Iron only</span><span data-l="vi">Chỉ mỏ hàn</span></div><div class="k"><span data-l="en">Through-hole, no hot air</span><span data-l="vi">Linh kiện chân cắm, không khò</span></div></div>
+      <div class="stat"><div class="v">~5 h</div><div class="k"><span data-l="en">Riding per charge (est.)</span><span data-l="vi">Mỗi lần sạc (ước tính)</span></div></div>
+      <div class="stat"><div class="v">41 × 49 × 23</div><div class="k"><span data-l="en">mm, screwless</span><span data-l="vi">mm, không ốc vít</span></div></div>
+      <div class="stat"><div class="v">ECDSA P-256</div><div class="k"><span data-l="en">Signed OTA updates</span><span data-l="vi">Cập nhật OTA có chữ ký</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SCREENS ================= -->
+<section class="section" id="screens">
+  <div class="wrap tour">
+    <div class="screen-stage reveal">
+      <img id="screen-img" src="assets/img/screen-turn.webp" width="720" height="720" alt="Turn-by-turn screen">
+    </div>
+    <div class="reveal">
+      <div class="eyebrow"><span data-l="en">The display</span><span data-l="vi">Màn hình</span></div>
+      <h2><span data-l="en">One glance. One decision.</span><span data-l="vi">Liếc một lần là đủ.</span></h2>
+      <p class="lede" style="margin-bottom:28px">
+        <span data-l="en">Big type, high contrast and nothing you don't need at 40 km/h. Every screen is drawn on the device at 30 fps; the phone only sends a few bytes.</span>
+        <span data-l="vi">Chữ to, tương phản cao, không có gì thừa khi đang chạy 40 km/h. Mọi màn được vẽ ngay trên thiết bị ở 30 khung hình/giây, điện thoại chỉ gửi vài byte.</span>
+      </p>
+      <ul class="screen-list" role="tablist" aria-label="Screens">
+        <li><button role="tab" aria-selected="true" data-src="assets/img/screen-turn.webp"><img src="assets/img/screen-turn.webp" alt="" width="44" height="44" loading="lazy">
+          <div><b data-l="en">Turn-by-turn</b><b data-l="vi">Chỉ dẫn rẽ</b>
+          <span data-l="en">Arrow, distance and street name. The ring fills as you approach the turn.</span>
+          <span data-l="vi">Mũi tên, khoảng cách và tên đường. Vòng sáng đầy dần khi tới gần chỗ rẽ.</span></div></button></li>
+        <li><button role="tab" aria-selected="false" data-src="assets/img/screen-map.webp"><img src="assets/img/screen-map.webp" alt="" width="44" height="44" loading="lazy">
+          <div><b data-l="en">Minimal map</b><b data-l="vi">Bản đồ tối giản</b>
+          <span data-l="en">Your route and the next junction, auto-zooming as the turn gets close.</span>
+          <span data-l="vi">Tuyến đường và ngã rẽ sắp tới, tự phóng to khi gần chỗ rẽ.</span></div></button></li>
+        <li><button role="tab" aria-selected="false" data-src="assets/img/screen-turn_alert.webp"><img src="assets/img/screen-turn_alert.webp" alt="" width="44" height="44" loading="lazy">
+          <div><b data-l="en">Alerts</b><b data-l="vi">Cảnh báo</b>
+          <span data-l="en">Speed cameras and hazards ahead, with the posted limit.</span>
+          <span data-l="vi">Camera tốc độ và nguy hiểm phía trước, kèm giới hạn tốc độ.</span></div></button></li>
+        <li><button role="tab" aria-selected="false" data-src="assets/img/screen-compass.webp"><img src="assets/img/screen-compass.webp" alt="" width="44" height="44" loading="lazy">
+          <div><b data-l="en">Compass</b><b data-l="vi">La bàn</b>
+          <span data-l="en">Points straight at your destination with the distance left.</span>
+          <span data-l="vi">Chỉ thẳng về điểm đến, kèm khoảng cách còn lại.</span></div></button></li>
+        <li><button role="tab" aria-selected="false" data-src="assets/img/screen-speed.webp"><img src="assets/img/screen-speed.webp" alt="" width="44" height="44" loading="lazy">
+          <div><b data-l="en">Speed</b><b data-l="vi">Tốc độ</b>
+          <span data-l="en">A tap on the button shows your speed against the limit.</span>
+          <span data-l="vi">Bấm nút một lần để xem tốc độ so với biển giới hạn.</span></div></button></li>
+        <li><button role="tab" aria-selected="false" data-src="assets/img/screen-pair.webp"><img src="assets/img/screen-pair.webp" alt="" width="44" height="44" loading="lazy">
+          <div><b data-l="en">Secure pairing</b><b data-l="vi">Ghép đôi bảo mật</b>
+          <span data-l="en">A 6-digit passkey on the screen, confirmed on your phone.</span>
+          <span data-l="vi">Mã 6 số hiện trên màn, xác nhận trên điện thoại.</span></div></button></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MODES ================= -->
+<section class="section alt" id="modes">
+  <div class="wrap">
+    <div class="head center reveal">
+      <div class="eyebrow"><span data-l="en">Navigation</span><span data-l="vi">Dẫn đường</span></div>
+      <h2><span data-l="en">Four ways to get there</span><span data-l="vi">Bốn chế độ dẫn đường</span></h2>
+      <p class="lede"><span data-l="en">Keep the app you already trust, or let VieLine plan the route itself. Switch modes in one tap.</span>
+        <span data-l="vi">Dùng app bạn đã quen, hoặc để VieLine tự tìm đường. Đổi chế độ chỉ một chạm.</span></p>
+    </div>
+    <div class="grid g4">
+      <article class="card reveal">
+        <span class="tag on"><span data-l="en">Recommended</span><span data-l="vi">Khuyên dùng</span></span>
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"/><path d="M9 4v14M15 6v14"/></svg></div>
+        <h3><span data-l="en">VieLine map</span><span data-l="vi">Bản đồ VieLine</span></h3>
+        <p><span data-l="en">Motorbike routing on OpenStreetMap with Valhalla, snapped to the road you are on. The only mode that also draws the mini map.</span>
+          <span data-l="vi">Tìm đường cho xe máy trên OpenStreetMap bằng Valhalla, bám đúng con đường bạn đang chạy. Chế độ duy nhất có thêm bản đồ tối giản.</span></p>
+      </article>
+      <article class="card reveal">
+        <span class="tag">Google Maps</span>
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg></div>
+        <h3><span data-l="en">Mirror Google Maps</span><span data-l="vi">Theo Google Maps</span></h3>
+        <p><span data-l="en">Start navigation in Google Maps as usual. VieLine reads its turn notifications and shows them on the handlebars.</span>
+          <span data-l="vi">Mở Google Maps dẫn đường như bình thường. VieLine đọc thông báo chỉ dẫn và hiện lên ghi-đông.</span></p>
+      </article>
+      <article class="card reveal">
+        <span class="tag">Waze</span>
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15a8 8 0 1 1 15.5-2.8c.6 2.6-1 5.8-4.5 5.8H9c-2.5 0-4-1.3-5-3Z"/><circle cx="9" cy="20" r="1.5"/><circle cx="16" cy="20" r="1.5"/></svg></div>
+        <h3><span data-l="en">Mirror Waze</span><span data-l="vi">Theo Waze</span></h3>
+        <p><span data-l="en">Reads the instruction Waze shows on screen through an Android accessibility service. No Waze SDK and no account linking.</span>
+          <span data-l="vi">Đọc chỉ dẫn Waze đang hiện trên màn qua dịch vụ trợ năng của Android. Không dùng SDK của Waze, không liên kết tài khoản.</span></p>
+      </article>
+      <article class="card reveal">
+        <span class="tag"><span data-l="en">Offline</span><span data-l="vi">Không cần mạng</span></span>
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></svg></div>
+        <h3><span data-l="en">Compass</span><span data-l="vi">La bàn</span></h3>
+        <p><span data-l="en">No route and no data needed. Shows the direction and distance to your destination, so you choose the streets.</span>
+          <span data-l="vi">Không cần tuyến, không cần mạng. Chỉ hướng và khoảng cách tới điểm đến, bạn tự chọn đường.</span></p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= HOW IT WORKS ================= -->
+<section class="section" id="how">
+  <div class="wrap">
+    <div class="head reveal">
+      <div class="eyebrow"><span data-l="en">How it works</span><span data-l="vi">Cách hoạt động</span></div>
+      <h2><span data-l="en">The phone thinks. The device shows.</span><span data-l="vi">Điện thoại tính toán. Thiết bị hiển thị.</span></h2>
+      <p class="lede"><span data-l="en">All the heavy work happens on the phone you already carry, so the device can stay small, cheap and fast.</span>
+        <span data-l="vi">Mọi việc nặng chạy trên điện thoại bạn vẫn mang theo, nhờ vậy thiết bị nhỏ, rẻ và phản hồi nhanh.</span></p>
+    </div>
+    <div class="diagram reveal" role="img" aria-label="Phone sends navigation over encrypted Bluetooth LE to the VieLine device">
+      <svg class="d-lg" viewBox="0 0 1100 230" xmlns="http://www.w3.org/2000/svg">
+        <defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path class="d-arrow" d="M0 0 10 5 0 10z"/></marker></defs>
+        <rect class="d-box" x="1" y="20" width="250" height="190" rx="18"/>
+        <text data-l="en" class="d-m" x="26" y="56">SOURCES</text><text data-l="vi" class="d-m" x="26" y="56">NGUỒN DỮ LIỆU</text>
+        <text class="d-t" x="26" y="88">OpenStreetMap</text><text class="d-s" x="26" y="110">Valhalla · Photon</text>
+        <text class="d-t" x="26" y="146">Google Maps / Waze</text><text data-l="en" class="d-s" x="26" y="168">turn instructions</text><text data-l="vi" class="d-s" x="26" y="168">chỉ dẫn rẽ</text>
+        <rect class="d-box" x="330" y="20" width="330" height="190" rx="18"/>
+        <text data-l="en" class="d-m" x="356" y="56">ANDROID APP</text><text data-l="vi" class="d-m" x="356" y="56">APP ANDROID</text>
+        <text data-l="en" class="d-t" x="356" y="88">Route + map-matching</text><text data-l="vi" class="d-t" x="356" y="88">Tuyến đường + bám đường</text><text data-l="en" class="d-s" x="356" y="110">follows the road you are actually on</text><text data-l="vi" class="d-s" x="356" y="110">bám đúng con đường bạn đang chạy</text>
+        <text data-l="en" class="d-t" x="356" y="146">Heading fusion</text><text data-l="vi" class="d-t" x="356" y="146">Kết hợp hướng đi</text><text data-l="en" class="d-s" x="356" y="168">GPS course + gyroscope, works in a pocket</text><text data-l="vi" class="d-s" x="356" y="168">GPS + con quay, đúng cả khi để trong túi</text>
+        <rect class="d-acc" x="790" y="20" width="308" height="190" rx="18"/>
+        <text data-l="en" class="d-m" x="816" y="56">VIELINE DEVICE</text><text data-l="vi" class="d-m" x="816" y="56">THIẾT BỊ VIELINE</text>
+        <text class="d-t" x="816" y="88">ESP32-S3 · LVGL 9</text><text data-l="en" class="d-s" x="816" y="110">dual core, 30 fps, sleeps at ~70 µA</text><text data-l="vi" class="d-s" x="816" y="110">2 nhân, 30 fps, ngủ chỉ ~70 µA</text>
+        <text data-l="en" class="d-t" x="816" y="146">1.28″ round IPS</text><text data-l="vi" class="d-t" x="816" y="146">Màn tròn IPS 1.28″</text><text data-l="en" class="d-s" x="816" y="168">one button, USB-C charging</text><text data-l="vi" class="d-s" x="816" y="168">một nút bấm, sạc USB-C</text>
+        <path class="d-line" d="M252 115H322" marker-end="url(#ar)"/>
+        <path class="d-line" d="M661 115H782" marker-end="url(#ar)"/>
+        <text class="d-m" x="721" y="100" text-anchor="middle" style="font-size:11px">BLE · LE SECURE</text>
+      </svg>
+      <svg class="d-sm" viewBox="0 0 360 560" xmlns="http://www.w3.org/2000/svg">
+        <defs><marker id="ar2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path class="d-arrow" d="M0 0 10 5 0 10z"/></marker></defs>
+        <rect class="d-box" x="1" y="1" width="358" height="140" rx="16"/>
+        <text data-l="en" class="d-m" x="22" y="34">SOURCES</text><text data-l="vi" class="d-m" x="22" y="34">NGUỒN DỮ LIỆU</text><text class="d-t" x="22" y="66">OpenStreetMap</text><text class="d-s" x="22" y="88">Valhalla · Photon</text><text class="d-t" x="22" y="118">Google Maps / Waze</text>
+        <path class="d-line" d="M180 142V184" marker-end="url(#ar2)"/>
+        <rect class="d-box" x="1" y="190" width="358" height="150" rx="16"/>
+        <text data-l="en" class="d-m" x="22" y="222">ANDROID APP</text><text data-l="vi" class="d-m" x="22" y="222">APP ANDROID</text><text data-l="en" class="d-t" x="22" y="254">Route + map-matching</text><text data-l="vi" class="d-t" x="22" y="254">Tuyến đường + bám đường</text><text data-l="en" class="d-t" x="22" y="290">Heading fusion</text><text data-l="vi" class="d-t" x="22" y="290">Kết hợp hướng đi</text><text data-l="en" class="d-s" x="22" y="312">GPS course + gyroscope</text><text data-l="vi" class="d-s" x="22" y="312">GPS + con quay hồi chuyển</text>
+        <path class="d-line" d="M180 341V394" marker-end="url(#ar2)"/><text class="d-m" x="192" y="374">BLE · LE SECURE</text>
+        <rect class="d-acc" x="1" y="400" width="358" height="158" rx="16"/>
+        <text data-l="en" class="d-m" x="22" y="432">VIELINE DEVICE</text><text data-l="vi" class="d-m" x="22" y="432">THIẾT BỊ VIELINE</text><text class="d-t" x="22" y="464">ESP32-S3 · LVGL 9</text><text data-l="en" class="d-s" x="22" y="486">30 fps, sleeps at ~70 µA</text><text data-l="vi" class="d-s" x="22" y="486">30 fps, ngủ chỉ ~70 µA</text><text data-l="en" class="d-t" x="22" y="522">1.28″ round IPS</text><text data-l="vi" class="d-t" x="22" y="522">Màn tròn IPS 1.28″</text>
+      </svg>
+    </div>
+    <div class="grid g3">
+      <article class="card reveal">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19 10 5l3 8 3-4 4 10"/></svg></div>
+        <h3><span data-l="en">Routes made for motorbikes</span><span data-l="vi">Tuyến đường cho xe máy</span></h3>
+        <p><span data-l="en">Valhalla's motor-scooter profile avoids roads closed to bikes. A road-snapping follower decides when you have really missed a turn, so it doesn't reroute at every GPS jump.</span>
+          <span data-l="vi">Hồ sơ xe máy của Valhalla tránh đường cấm xe máy. Bộ bám đường chỉ coi là đi sai khi bạn thật sự lệch tuyến, không tìm lại đường mỗi lần GPS nhảy.</span></p>
+      </article>
+      <article class="card reveal">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/><circle cx="12" cy="12" r="2"/></svg></div>
+        <h3><span data-l="en">Heading that works in a pocket</span><span data-l="vi">Hướng đúng cả khi để trong túi</span></h3>
+        <p><span data-l="en">A phone's compass is useless face-down in a jacket. VieLine uses the GPS course and fills the gaps with the gyroscope, so the compass and map stay steady at low speed.</span>
+          <span data-l="vi">La bàn điện thoại sai khi úp trong túi áo. VieLine lấy hướng di chuyển từ GPS và dùng con quay hồi chuyển bù vào chỗ trống, nên la bàn và bản đồ vẫn ổn định khi chạy chậm.</span></p>
+      </article>
+      <article class="card reveal">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/></svg></div>
+        <h3><span data-l="en">Alerts from open data</span><span data-l="vi">Cảnh báo từ dữ liệu mở</span></h3>
+        <p><span data-l="en">Speed cameras and speed limits come from OpenStreetMap. Waze community reports can be switched on as an optional extra.</span>
+          <span data-l="vi">Camera tốc độ và giới hạn tốc độ lấy từ OpenStreetMap. Có thể bật thêm báo cáo cộng đồng của Waze nếu muốn.</span></p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SECURITY ================= -->
+<section class="section alt" id="security">
+  <div class="wrap">
+    <div class="head center reveal">
+      <div class="eyebrow"><span data-l="en">Security &amp; privacy</span><span data-l="vi">Bảo mật &amp; riêng tư</span></div>
+      <h2><span data-l="en">Secure by default, private by design</span><span data-l="vi">Bảo mật sẵn, riêng tư từ thiết kế</span></h2>
+    </div>
+    <div class="grid g3">
+      <article class="card reveal">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 7 10 10-5 5V2l5 5L7 17"/></svg></div>
+        <h3><span data-l="en">Encrypted pairing</span><span data-l="vi">Ghép đôi mã hoá</span></h3>
+        <p><span data-l="en">Bluetooth LE Secure Connections with a passkey shown on the device. A new phone can pair only when the device has no bond yet or you hold the button at power-on; unknown phones are disconnected.</span>
+          <span data-l="vi">Bluetooth LE Secure Connections với mã hiện trên thiết bị. Điện thoại mới chỉ ghép được khi thiết bị chưa có liên kết, hoặc khi bạn giữ nút lúc bật máy. Điện thoại lạ bị ngắt kết nối.</span></p>
+      </article>
+      <article class="card reveal">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg></div>
+        <h3><span data-l="en">Signed firmware only</span><span data-l="vi">Chỉ nhận firmware có chữ ký</span></h3>
+        <p><span data-l="en">Every update carries an ECDSA P-256 signature that the device checks before installing. Older versions are refused, and a build that fails to start rolls back on its own.</span>
+          <span data-l="vi">Mỗi bản cập nhật có chữ ký ECDSA P-256, thiết bị kiểm tra trước khi cài. Bản cũ hơn bị từ chối, bản lỗi không khởi động được sẽ tự quay về bản trước.</span></p>
+      </article>
+      <article class="card reveal">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></div>
+        <h3><span data-l="en">No account, no tracking</span><span data-l="vi">Không tài khoản, không theo dõi</span></h3>
+        <p><span data-l="en">There are no VieLine servers and no analytics. Search and routing go straight to public OpenStreetMap services over HTTPS. Usernames in Waze reports are dropped on receipt and never stored.</span>
+          <span data-l="vi">Không có máy chủ VieLine, không thu thập số liệu. Tìm kiếm và tìm đường gửi thẳng tới dịch vụ OpenStreetMap công khai qua HTTPS. Tên người dùng trong báo cáo Waze bị bỏ ngay khi nhận, không lưu lại.</span></p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= HARDWARE ================= -->
+<section class="section" id="hardware">
+  <div class="wrap">
+    <div class="head reveal">
+      <div class="eyebrow"><span data-l="en">Hardware v0.8</span><span data-l="vi">Phần cứng v0.8</span></div>
+      <h2><span data-l="en">Twelve parts. One soldering iron.</span><span data-l="vi">12 linh kiện. Một cây mỏ hàn.</span></h2>
+      <p class="lede"><span data-l="en">Every part is a ready-made module or a through-hole component, all from one electronics shop in Ho Chi Minh City. No hot air, no SMD rework, no screws.</span>
+        <span data-l="vi">Mọi linh kiện là mạch làm sẵn hoặc linh kiện chân cắm, mua hết ở một cửa hàng điện tử tại TP.HCM. Không cần máy khò, không phải hàn linh kiện dán, không có ốc vít.</span></p>
+    </div>
+    <div class="hw">
+      <div class="hw-art reveal"><img src="assets/img/exploded.webp" width="1200" height="1300" loading="lazy" alt="Exploded view: front shell, display, frame, battery, ESP32-S3, TP4056, back cover and mount"></div>
+      <div class="reveal">
+        <table class="bom">
+          <thead><tr><th>#</th><th><span data-l="en">Part</span><span data-l="vi">Linh kiện</span></th><th><span data-l="en">Qty</span><span data-l="vi">SL</span></th></tr></thead>
+          <tbody>
+            <tr><td>01</td><td><span data-l="en">GC9A01 1.28″ round IPS LCD, SPI</span><span data-l="vi">Màn LCD tròn GC9A01 1.28″ IPS, SPI</span></td><td>1</td></tr>
+            <tr><td>02</td><td>ESP32-S3 SuperMini <small><span data-l="en">Nologo, FH4R2 (4 MB flash, 2 MB PSRAM), on-board charger</span><span data-l="vi">Nologo, FH4R2 (4 MB flash, 2 MB PSRAM), có chip sạc</span></small></td><td>1</td></tr>
+            <tr><td>03</td><td><span data-l="en">TP4056 USB-C module</span><span data-l="vi">Mạch TP4056 Type-C</span><small><span data-l="en">used as battery protection</span><span data-l="vi">chỉ dùng làm mạch bảo vệ pin</span></small></td><td>1</td></tr>
+            <tr><td>04</td><td><span data-l="en">LiPo battery 400 mAh (562527)</span><span data-l="vi">Pin LiPo 400 mAh (562527)</span></td><td>1</td></tr>
+            <tr><td>05</td><td><span data-l="en">Waterproof push button 6×6×7 mm</span><span data-l="vi">Nút nhấn chống nước 6×6×7 mm</span></td><td>1</td></tr>
+            <tr><td>06</td><td><span data-l="en">1N5819 Schottky diode</span><span data-l="vi">Diode Schottky 1N5819</span></td><td>1</td></tr>
+            <tr><td>07</td><td><span data-l="en">S8550 PNP transistor (display power switch)</span><span data-l="vi">Transistor PNP S8550 (công tắc nguồn màn)</span></td><td>1</td></tr>
+            <tr><td>08</td><td><span data-l="en">100 kΩ resistor (battery sense)</span><span data-l="vi">Điện trở 100 kΩ (đo pin)</span></td><td>2</td></tr>
+            <tr><td>09</td><td><span data-l="en">1 kΩ resistor</span><span data-l="vi">Điện trở 1 kΩ</span></td><td>1</td></tr>
+            <tr><td>10</td><td><span data-l="en">10-wire ribbon cable, 1.27 mm</span><span data-l="vi">Dây bẹ 10 sợi 1,27 mm</span></td><td>1 m</td></tr>
+            <tr><td>11</td><td><span data-l="en">705 silicone sealant</span><span data-l="vi">Keo silicone 705</span></td><td>1</td></tr>
+            <tr><td>12</td><td><span data-l="en">Double-sided silicone pad 40×40×1 mm</span><span data-l="vi">Tấm silicone 2 mặt 40×40×1 mm</span></td><td>2</td></tr>
+          </tbody>
+                  </table>
+        <p class="note"><span data-l="en">All parts are available at Điện tử Tuyết Nga in Ho Chi Minh City. You also need about 20 g of PETG and any GoPro-style handlebar mount.</span>
+          <span data-l="vi">Mua đủ ở Điện tử Tuyết Nga (TP.HCM). Cần thêm khoảng 20 g nhựa PETG và một đế kẹp ghi-đông kiểu GoPro.</span></p>
+        <div class="chips">
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg><span data-l="en">5 extra parts, all through-hole</span><span data-l="vi">Chỉ 5 linh kiện phụ, đều chân cắm</span></span>
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg><span data-l="en">Battery protected (DW01)</span><span data-l="vi">Pin có mạch bảo vệ (DW01)</span></span>
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg><span data-l="en">One USB-C port: charge, flash, debug</span><span data-l="vi">Một cổng USB-C: sạc, nạp, xem log</span></span>
+        </div>
+        <div class="cta" style="display:flex;gap:12px;flex-wrap:wrap;margin-top:28px">
+          <a class="btn btn-ghost btn-sm" href="hardware/wiring.svg"><span data-l="en">Wiring diagram</span><span data-l="vi">Sơ đồ đấu nối</span></a>
+          <a class="btn btn-ghost btn-sm" href="https://github.com/h2n07/VieLine/tree/main/hardware"><span data-l="en">Full BOM &amp; build notes</span><span data-l="vi">BOM đầy đủ &amp; ghi chú lắp</span></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid g3" style="margin-top:56px">
+      <figure class="shot reveal"><img src="assets/img/front.webp" width="900" height="1000" loading="lazy" alt="Front view">
+        <figcaption><h3><span data-l="en">Faceted front, rounded body</span><span data-l="vi">Mặt trước vát cạnh, thân bo tròn</span></h3>
+          <p><span data-l="en">An eight-facet chamfer and a 45° bevelled window, with the wordmark engraved in the chin. Prints in one colour, no paint. 41.4 × 48.6 × 22.9 mm.</span>
+            <span data-l="vi">Vành vát 8 mặt, lỗ nhìn vát 45°, chữ VieLine khắc nổi ở cằm. In một màu, không cần sơn. 41,4 × 48,6 × 22,9 mm.</span></p></figcaption></figure>
+      <figure class="shot reveal"><img src="assets/img/gopro.webp" width="1000" height="900" loading="lazy" alt="GoPro twist-lock adapter">
+        <figcaption><h3><span data-l="en">GoPro twist-lock</span><span data-l="vi">Ngàm GoPro xoay khoá</span></h3>
+          <p><span data-l="en">The printed adapter plugs into the back and locks with a 90° turn. Its two prongs fit any standard GoPro mount.</span>
+            <span data-l="vi">Ngàm in 3D cắm vào lưng thiết bị, xoay 90° là khoá. Hai chấu GoPro tiêu chuẩn bắt vào mọi đế GoPro.</span></p></figcaption></figure>
+      <figure class="shot reveal"><img src="assets/img/garmin.webp" width="1000" height="1000" loading="lazy" alt="Garmin quarter-turn adapter">
+        <figcaption><h3><span data-l="en">Or Garmin quarter-turn</span><span data-l="vi">Hoặc ngàm Garmin</span></h3>
+          <p><span data-l="en">Already have a Garmin bike mount? Print the alternative adapter and use the mount you own.</span>
+            <span data-l="vi">Đã có đế Garmin trên xe? In bản ngàm Garmin và dùng luôn đế sẵn có.</span></p></figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ================= APP ================= -->
+<section class="section alt" id="app">
+  <div class="wrap">
+    <div class="head center reveal">
+      <div class="eyebrow">Android app</div>
+      <h2><span data-l="en">Everything in four tabs</span><span data-l="vi">Mọi thứ trong bốn tab</span></h2>
+      <p class="lede"><span data-l="en">Search places as you type, tap anywhere to drop a pin, and send it to the handlebars. One dependency, about 2 MB.</span>
+        <span data-l="vi">Gõ tới đâu gợi ý tới đó, chạm bất kỳ đâu để thả ghim, rồi gửi lên ghi-đông. Một thư viện duy nhất, khoảng 2 MB.</span></p>
+    </div>
+    <div class="store reveal" data-l="en">
+      <a href="assets/img/store/en-01-hero.webp" class="store-shot"><img src="assets/img/store/en-01-hero.webp" width="645" height="1398" loading="lazy" alt="VieLine"></a>
+      <a href="assets/img/store/en-02-screens.webp" class="store-shot"><img src="assets/img/store/en-02-screens.webp" width="645" height="1398" loading="lazy" alt="Device screens"></a>
+      <a href="assets/img/store/en-03-modes.webp" class="store-shot"><img src="assets/img/store/en-03-modes.webp" width="645" height="1398" loading="lazy" alt="Navigation modes"></a>
+      <a href="assets/img/store/en-04-search.webp" class="store-shot"><img src="assets/img/store/en-04-search.webp" width="645" height="1398" loading="lazy" alt="Place search"></a>
+      <a href="assets/img/store/en-05-pick.webp" class="store-shot"><img src="assets/img/store/en-05-pick.webp" width="645" height="1398" loading="lazy" alt="Pick a destination"></a>
+      <a href="assets/img/store/en-06-device.webp" class="store-shot"><img src="assets/img/store/en-06-device.webp" width="645" height="1398" loading="lazy" alt="Device and updates"></a>
+    </div>
+    <div class="store reveal" data-l="vi">
+      <a href="assets/img/store/vi-01-hero.webp" class="store-shot"><img src="assets/img/store/vi-01-hero.webp" width="645" height="1398" loading="lazy" alt="VieLine"></a>
+      <a href="assets/img/store/vi-02-screens.webp" class="store-shot"><img src="assets/img/store/vi-02-screens.webp" width="645" height="1398" loading="lazy" alt="Màn hình thiết bị"></a>
+      <a href="assets/img/store/vi-03-modes.webp" class="store-shot"><img src="assets/img/store/vi-03-modes.webp" width="645" height="1398" loading="lazy" alt="Chế độ dẫn đường"></a>
+      <a href="assets/img/store/vi-04-search.webp" class="store-shot"><img src="assets/img/store/vi-04-search.webp" width="645" height="1398" loading="lazy" alt="Tìm địa điểm"></a>
+      <a href="assets/img/store/vi-05-pick.webp" class="store-shot"><img src="assets/img/store/vi-05-pick.webp" width="645" height="1398" loading="lazy" alt="Chọn điểm đến"></a>
+      <a href="assets/img/store/vi-06-device.webp" class="store-shot"><img src="assets/img/store/vi-06-device.webp" width="645" height="1398" loading="lazy" alt="Thiết bị và cập nhật"></a>
+    </div>
+    <p class="store-note"><span data-l="en">App screens are real captures from Android. The app interface is in Vietnamese for now.</span><span data-l="vi">Màn hình app là ảnh chụp thật trên Android.</span>
+      <a href="https://github.com/h2n07/VieLine/releases/download/v0.1.0/VieLine_0.1.0_images.zip"><span data-l="en">Download full-size images</span><span data-l="vi">Tải ảnh độ phân giải gốc</span></a></p>
+  </div>
+</section>
+
+<!-- ================= GET STARTED ================= -->
+<section class="section" id="start">
+  <div class="wrap">
+    <div class="head reveal">
+      <div class="eyebrow"><span data-l="en">Get started</span><span data-l="vi">Bắt đầu</span></div>
+      <h2><span data-l="en">From parts to your first ride</span><span data-l="vi">Từ linh kiện tới chuyến đi đầu tiên</span></h2>
+    </div>
+    <div class="grid g4 steps">
+      <article class="card step reveal">
+        <h3><span data-l="en">Buy the parts</span><span data-l="vi">Mua linh kiện</span></h3>
+        <p><span data-l="en">Twelve items from the BOM, plus PETG filament and a GoPro handlebar mount.</span>
+          <span data-l="vi">12 món trong BOM, thêm nhựa PETG và đế kẹp ghi-đông GoPro.</span></p>
+        <div class="links"><a href="#hardware">BOM</a></div>
+      </article>
+      <article class="card step reveal">
+        <h3><span data-l="en">Print &amp; solder</span><span data-l="vi">In vỏ &amp; hàn</span></h3>
+        <p><span data-l="en">Print the single plate file, then solder by the wiring diagram. The parts are held by the printed frame and double-sided pads.</span>
+          <span data-l="vi">In một file bàn in duy nhất, rồi hàn theo sơ đồ. Linh kiện được giữ bằng khung in và tấm dán 2 mặt.</span></p>
+        <div class="links"><a href="hardware/enclosure/stl/vieline_v0.8_ban_in_day_du.stl">STL</a><a href="hardware/wiring.svg"><span data-l="en">Wiring</span><span data-l="vi">Sơ đồ</span></a><a href="https://github.com/h2n07/VieLine/tree/main/hardware/enclosure"><span data-l="en">Assembly</span><span data-l="vi">Lắp ráp</span></a></div>
+      </article>
+      <article class="card step reveal">
+        <h3><span data-l="en">Flash in the browser</span><span data-l="vi">Nạp trên trình duyệt</span></h3>
+        <p><span data-l="en">Plug in USB-C, open the flasher in Chrome or Edge and click once. No tools to install.</span>
+          <span data-l="vi">Cắm cáp USB-C, mở trang nạp bằng Chrome hoặc Edge và bấm một lần. Không cần cài gì.</span></p>
+        <div class="links"><a href="flash/"><span data-l="en">Open the flasher</span><span data-l="vi">Mở trang nạp</span></a></div>
+      </article>
+      <article class="card step reveal">
+        <h3><span data-l="en">Install &amp; pair</span><span data-l="vi">Cài app &amp; ghép đôi</span></h3>
+        <p><span data-l="en">Install the APK, allow Location, Bluetooth and Notifications, then enter the 6-digit code shown on the device.</span>
+          <span data-l="vi">Cài APK, cấp quyền Vị trí, Bluetooth và Thông báo, rồi nhập mã 6 số hiện trên thiết bị.</span></p>
+        <div class="links"><a href="https://github.com/h2n07/VieLine/releases/download/v0.1.0/VieLine-0.1.0.apk"><span data-l="en">Download APK</span><span data-l="vi">Tải APK</span></a></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= DOWNLOADS ================= -->
+<section class="section alt" id="downloads">
+  <div class="wrap">
+    <div class="head reveal">
+      <div class="eyebrow"><span data-l="en">Downloads</span><span data-l="vi">Tải về</span></div>
+      <h2><span data-l="en">Release 0.1.0</span><span data-l="vi">Phiên bản 0.1.0</span></h2>
+      <p class="lede"><span data-l="en">Firmware updates after the first install are delivered through the app and only install if signed.</span>
+        <span data-l="vi">Sau lần nạp đầu, firmware được cập nhật qua app và chỉ cài khi có chữ ký hợp lệ.</span></p>
+    </div>
+    <div class="dl reveal">
+      <div class="dl-row"><div><b><span data-l="en">Firmware</span><span data-l="vi">Firmware</span></b><span><span data-l="en">Web flasher for the first install (ESP32-S3, 4 MB)</span><span data-l="vi">Trang nạp cho lần cài đầu (ESP32-S3, 4 MB)</span></span></div>
+        <span class="meta">v0.1.0</span><a class="btn btn-primary btn-sm" href="flash/"><span data-l="en">Flash</span><span data-l="vi">Nạp</span></a></div>
+      <div class="dl-row"><div><b><span data-l="en">Android app</span><span data-l="vi">App Android</span></b><span>Android 8.0+ · APK</span></div>
+        <span class="meta">2.1 MB</span><a class="btn btn-ghost btn-sm" href="https://github.com/h2n07/VieLine/releases/download/v0.1.0/VieLine-0.1.0.apk"><span data-l="en">Download</span><span data-l="vi">Tải</span></a></div>
+      <div class="dl-row"><div><b><span data-l="en">3D print files</span><span data-l="vi">File in 3D</span></b><span><span data-l="en">All five parts on one plate, PETG</span><span data-l="vi">Cả 5 chi tiết trên một bàn in, PETG</span></span></div>
+        <span class="meta">STL</span><a class="btn btn-ghost btn-sm" href="hardware/enclosure/stl/vieline_v0.8_ban_in_day_du.stl" download><span data-l="en">Download</span><span data-l="vi">Tải</span></a></div>
+      <div class="dl-row"><div><b><span data-l="en">Wiring diagram</span><span data-l="vi">Sơ đồ đấu nối</span></b><span><span data-l="en">Pin map, power path and parts placement</span><span data-l="vi">Bảng chân, đường nguồn và vị trí linh kiện</span></span></div>
+        <span class="meta">SVG</span><a class="btn btn-ghost btn-sm" href="hardware/wiring.svg"><span data-l="en">Open</span><span data-l="vi">Mở</span></a></div>
+      <div class="dl-row"><div><b><span data-l="en">Complete package</span><span data-l="vi">Gói đầy đủ</span></b><span><span data-l="en">Firmware, app, hardware files, offline flasher and licences</span><span data-l="vi">Firmware, app, phần cứng, trang nạp ngoại tuyến và giấy phép</span></span></div>
+        <span class="meta">3.3 MB</span><a class="btn btn-ghost btn-sm" href="https://github.com/h2n07/VieLine/releases/download/v0.1.0/VieLine_0.1.0.zip"><span data-l="en">Download</span><span data-l="vi">Tải</span></a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section class="section" id="faq">
+  <div class="wrap">
+    <div class="head center reveal">
+      <div class="eyebrow">FAQ</div>
+      <h2><span data-l="en">Questions, answered</span><span data-l="vi">Câu hỏi thường gặp</span></h2>
+    </div>
+    <div class="faq reveal">
+      <details><summary><span data-l="en">Is VieLine open source?</span><span data-l="vi">VieLine có phải mã nguồn mở không?</span></summary>
+        <p><span data-l="en">No. The firmware and app are free to use as compiled releases for personal, non-commercial purposes. The hardware files (wiring, BOM, STL, images, guides) are shared under CC BY-NC-SA 4.0. The source code is not published.</span>
+          <span data-l="vi">Không. Firmware và app được dùng miễn phí dưới dạng bản đã biên dịch, cho mục đích cá nhân, phi thương mại. Tài liệu phần cứng (sơ đồ, BOM, STL, ảnh, hướng dẫn) chia sẻ theo CC BY-NC-SA 4.0. Mã nguồn không được công bố.</span></p></details>
+      <details><summary><span data-l="en">Which phones are supported?</span><span data-l="vi">Điện thoại nào dùng được?</span></summary>
+        <p><span data-l="en">Android 8.0 or newer with Bluetooth LE. iPhone is not supported yet, because the Google Maps and Waze modes rely on Android notification and accessibility access.</span>
+          <span data-l="vi">Android 8.0 trở lên có Bluetooth LE. Chưa hỗ trợ iPhone, vì chế độ Google Maps và Waze cần quyền đọc thông báo và trợ năng của Android.</span></p></details>
+      <details><summary><span data-l="en">Does it need mobile data?</span><span data-l="vi">Có cần mạng di động không?</span></summary>
+        <p><span data-l="en">Search, routing and map tiles need a connection. Compass mode works with GPS only, and Google Maps mode works with whatever Google Maps can do offline.</span>
+          <span data-l="vi">Tìm kiếm, tìm đường và tải bản đồ cần mạng. Chế độ la bàn chỉ cần GPS, còn chế độ Google Maps chạy được khi Google Maps chạy được, kể cả bản đồ ngoại tuyến.</span></p></details>
+      <details><summary><span data-l="en">A street name on the map is wrong. Can it be fixed?</span><span data-l="vi">Bản đồ ghi sai tên đường, sửa được không?</span></summary>
+        <p><span data-l="en">Map data comes from OpenStreetMap, which anyone can edit. Fix it at openstreetmap.org and the change reaches search and routing within days.</span>
+          <span data-l="vi">Dữ liệu bản đồ lấy từ OpenStreetMap, ai cũng sửa được. Sửa trên openstreetmap.org, vài ngày sau tìm kiếm và tìm đường sẽ cập nhật.</span></p></details>
+      <details><summary><span data-l="en">How long does the battery last?</span><span data-l="vi">Pin dùng được bao lâu?</span></summary>
+        <p><span data-l="en">An estimated 4.5 to 5.5 hours of riding on the 400 mAh cell, and months in sleep. It charges over USB-C in about 1.5 to 2 hours and keeps working while charging.</span>
+          <span data-l="vi">Ước tính 4,5–5,5 giờ chạy với pin 400 mAh, ngủ được vài tháng. Sạc qua USB-C khoảng 1,5–2 giờ, vẫn dùng bình thường trong lúc sạc.</span></p></details>
+      <details><summary><span data-l="en">Can I build devices to sell?</span><span data-l="vi">Tôi có thể làm thiết bị để bán không?</span></summary>
+        <p><span data-l="en">Not under the free licence. For assembled units or a commercial licence, open an issue on GitHub and we will get in touch.</span>
+          <span data-l="vi">Giấy phép miễn phí không cho phép. Muốn mua thiết bị lắp sẵn hoặc cần giấy phép thương mại, hãy mở issue trên GitHub để được liên hệ.</span></p></details>
+      <details><summary><span data-l="en">Is it safe to use while riding?</span><span data-l="vi">Dùng khi đang chạy xe có an toàn không?</span></summary>
+        <p><span data-l="en">VieLine is designed to be read at a glance. Set your destination before you ride, never operate the phone while moving, and always follow road signs and traffic law.</span>
+          <span data-l="vi">VieLine được thiết kế để chỉ cần liếc qua. Chọn điểm đến trước khi chạy, không thao tác điện thoại khi xe đang chạy, và luôn tuân theo biển báo cùng luật giao thông.</span></p></details>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="wrap">
+    <div class="cta-band reveal">
+      <div>
+        <h2><span data-l="en">Ready to build yours?</span><span data-l="vi">Sẵn sàng tự làm một chiếc?</span></h2>
+        <p><span data-l="en">Order twelve parts, print one plate, and flash it right from this page. Found a problem? Tell us on GitHub.</span>
+          <span data-l="vi">Mua 12 linh kiện, in một bàn in, rồi nạp firmware ngay trên trang này. Gặp lỗi thì báo trên GitHub.</span></p>
+      </div>
+      <div class="cta">
+        <a class="btn btn-primary" href="flash/"><span data-l="en">Flash firmware</span><span data-l="vi">Nạp firmware</span></a>
+        <a class="btn btn-ghost" href="#hardware"><span data-l="en">See the parts</span><span data-l="vi">Xem linh kiện</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a class="logo" href="#top"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="none" stroke="#2fd5a4" stroke-width="3"/><path d="M16 7.5 23 23l-7-3.6L9 23z" fill="currentColor"/></svg><span>Vie<b>Line</b></span></a>
+        <p><span data-l="en">Handlebar navigation you build yourself. Made in Ho Chi Minh City.</span><span data-l="vi">Thiết bị dẫn đường gắn ghi-đông tự làm. Làm tại TP. Hồ Chí Minh.</span></p>
+      </div>
+      <div><h4><span data-l="en">Product</span><span data-l="vi">Sản phẩm</span></h4><ul>
+        <li><a href="#screens"><span data-l="en">Display</span><span data-l="vi">Màn hình</span></a></li>
+        <li><a href="#modes"><span data-l="en">Navigation modes</span><span data-l="vi">Chế độ dẫn đường</span></a></li>
+        <li><a href="#security"><span data-l="en">Security</span><span data-l="vi">Bảo mật</span></a></li>
+        <li><a href="#app">App</a></li></ul></div>
+      <div><h4><span data-l="en">Build</span><span data-l="vi">Tự làm</span></h4><ul>
+        <li><a href="#hardware">BOM</a></li>
+        <li><a href="hardware/wiring.svg"><span data-l="en">Wiring diagram</span><span data-l="vi">Sơ đồ đấu nối</span></a></li>
+        <li><a href="flash/"><span data-l="en">Web flasher</span><span data-l="vi">Trang nạp firmware</span></a></li>
+        <li><a href="https://github.com/h2n07/VieLine/releases"><span data-l="en">Releases</span><span data-l="vi">Các phiên bản</span></a></li></ul></div>
+      <div><h4><span data-l="en">Legal</span><span data-l="vi">Pháp lý</span></h4><ul>
+        <li><a href="https://github.com/h2n07/VieLine/blob/main/LICENSE.md"><span data-l="en">Licence</span><span data-l="vi">Giấy phép</span></a></li>
+        <li><a href="https://github.com/h2n07/VieLine/blob/main/THIRD_PARTY_NOTICES.md"><span data-l="en">Third-party notices</span><span data-l="vi">Thành phần bên thứ ba</span></a></li>
+        <li><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></li>
+        <li><a href="https://github.com/h2n07/VieLine/issues"><span data-l="en">Contact &amp; issues</span><span data-l="vi">Liên hệ &amp; báo lỗi</span></a></li></ul></div>
+    </div>
+    <div class="legal">
+      <span>© 2026 VieLine. <span data-l="en">Map data © OpenStreetMap contributors.</span><span data-l="vi">Dữ liệu bản đồ © OpenStreetMap contributors.</span></span>
+      <span><span data-l="en">Not affiliated with Beeline, Google or Waze. Names are trademarks of their owners.</span><span data-l="vi">Không liên quan tới Beeline, Google hay Waze. Các tên là thương hiệu của chủ sở hữu.</span></span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/site.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VieLine · Flash firmware</title>
+<meta name="description" content="Install VieLine firmware on an ESP32-S3 from Chrome or Edge. No software to install.">
+<meta name="theme-color" content="#07090c">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2307090c'/%3E%3Ccircle cx='16' cy='16' r='11.5' fill='none' stroke='%232fd5a4' stroke-width='2.6'/%3E%3Cpath d='M16 9.2 21.6 21.6 16 18.7 10.4 21.6z' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<script type="module" src="https://unpkg.com/esp-web-tools@10.4.0/dist/web/install-button.js?module"></script>
+<script>
+  (function () {
+    var l = new URLSearchParams(location.search).get('lang');
+    try { l = l || localStorage.getItem('vl-lang'); } catch (e) {}
+    l = l || ((navigator.languages || [navigator.language || 'en'])[0].toLowerCase().indexOf('vi') === 0 ? 'vi' : 'en');
+    if (l !== 'vi') l = 'en';
+    document.documentElement.dataset.lang = l; document.documentElement.lang = l;
+  })();
+</script>
+<style>
+  :root { --bg:#07090c; --card:#0f141a; --card2:#161c24; --line:#1f2731; --line2:#2c3642; --text:#f2f5f8; --sub:#c9d1db; --dim:#94a0ae;
+    --accent:#2fd5a4; --warn:#ffb020; --font:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; --mono:"JetBrains Mono",ui-monospace,Consolas,monospace; color-scheme: dark; }
+  html[data-lang="en"] [data-l="vi"], html[data-lang="vi"] [data-l="en"] { display:none !important; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:400 16px/1.6 var(--font); -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+  body::before { content:""; position:fixed; right:-260px; top:-260px; width:760px; height:760px; z-index:-1; pointer-events:none;
+    background:radial-gradient(closest-side, rgba(47,213,164,.18), transparent 70%); }
+  a { color:var(--accent); text-decoration:none; } a:hover { text-decoration:underline; text-underline-offset:3px; }
+  :focus-visible { outline:2px solid var(--accent); outline-offset:3px; border-radius:6px; }
+  header { border-bottom:1px solid var(--line); }
+  .bar, main { max-width:760px; margin:0 auto; padding:0 20px; }
+  .bar { display:flex; align-items:center; justify-content:space-between; height:64px; gap:16px; }
+  .logo { display:inline-flex; align-items:center; gap:10px; color:var(--text); font-weight:700; font-size:18px; letter-spacing:-.02em; }
+  .logo:hover { text-decoration:none; } .logo svg { width:28px; height:28px; } .logo b { color:var(--accent); }
+  .right { display:flex; align-items:center; gap:14px; font-size:14px; }
+  .right > a { color:var(--sub); }
+  .lang { display:inline-flex; border:1px solid var(--line2); border-radius:10px; padding:3px; gap:2px; }
+  .lang button { border:0; background:transparent; color:var(--dim); font:600 13px/1 var(--mono); padding:7px 9px; border-radius:7px; cursor:pointer; }
+  .lang button[aria-pressed="true"] { background:var(--text); color:var(--bg); }
+  main { padding-top:56px; padding-bottom:72px; }
+  .eyebrow { font:600 13px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--accent); margin-bottom:14px; }
+  h1 { font-size:clamp(34px,6vw,48px); line-height:1.08; letter-spacing:-.03em; margin:0; }
+  .lead { color:var(--dim); font-size:18px; margin:14px 0 0; max-width:600px; }
+  .ver { display:inline-block; margin-top:18px; font:500 13px/1 var(--mono); color:var(--sub); border:1px solid var(--line2); border-radius:999px; padding:7px 12px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:22px; padding:28px; margin-top:20px; }
+  .card h2 { font-size:18px; margin:0 0 14px; letter-spacing:-.01em; }
+  ol { margin:0; padding:0; list-style:none; counter-reset:s; display:grid; gap:14px; }
+  ol li { position:relative; padding-left:40px; color:var(--sub); }
+  ol li::before { counter-increment:s; content:counter(s); position:absolute; left:0; top:1px; width:26px; height:26px; border-radius:8px; display:grid; place-items:center;
+    background:rgba(47,213,164,.12); color:var(--accent); font:600 13px/1 var(--mono); }
+  ul { margin:0; padding-left:20px; color:var(--sub); display:grid; gap:8px; }
+  esp-web-install-button { display:block; margin-top:24px; }
+  esp-web-install-button [slot=activate] { width:100%; height:56px; border:0; border-radius:14px; font:700 17px var(--font);
+    background:var(--accent); color:#04110c; cursor:pointer; transition:background .15s, transform .15s; }
+  esp-web-install-button [slot=activate]:hover { background:#48e0b3; transform:translateY(-1px); }
+  .warn { display:block; color:var(--warn); background:rgba(255,176,32,.08); border:1px solid rgba(255,176,32,.25); border-radius:12px; padding:14px 16px; }
+  code { font-family:var(--mono); font-size:.88em; background:var(--card2); padding:2px 7px; border-radius:6px; color:var(--text); }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .grid .card { margin-top:0; }
+  @media (max-width:640px) { .grid { grid-template-columns:1fr; } .card { padding:22px; } .right > a { display:none; } }
+  footer { border-top:1px solid var(--line); color:var(--dim); font-size:13.5px; }
+  footer .bar { height:auto; padding-top:24px; padding-bottom:32px; display:block; }
+  footer p { margin:0 0 6px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <a class="logo" href="../"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="none" stroke="#2fd5a4" stroke-width="3"/><path d="M16 7.5 23 23l-7-3.6L9 23z" fill="#fff"/></svg><span>Vie<b>Line</b></span></a>
+    <div class="right">
+      <a href="../"><span data-l="en">← Project home</span><span data-l="vi">← Trang dự án</span></a>
+      <div class="lang" role="group" aria-label="Language / Ngôn ngữ">
+        <button type="button" data-set="en" aria-pressed="true">EN</button>
+        <button type="button" data-set="vi" aria-pressed="false">VI</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="eyebrow"><span data-l="en">Web flasher</span><span data-l="vi">Nạp firmware trên trình duyệt</span></div>
+  <h1><span data-l="en">Flash VieLine firmware</span><span data-l="vi">Nạp firmware VieLine</span></h1>
+  <p class="lead"><span data-l="en">Install the firmware on your ESP32-S3 straight from this page. Nothing to download, nothing to install.</span>
+    <span data-l="vi">Cài firmware vào ESP32-S3 ngay trên trang này. Không cần tải hay cài phần mềm nào.</span></p>
+  <span class="ver" id="ver">ESP32-S3 · 4 MB</span>
+
+  <section class="card">
+    <h2><span data-l="en">Install</span><span data-l="vi">Cài đặt</span></h2>
+    <ol>
+      <li><span data-l="en">Use <b>Chrome</b> or <b>Edge</b> on a computer. Phones and Safari/Firefox can't flash.</span>
+        <span data-l="vi">Dùng <b>Chrome</b> hoặc <b>Edge</b> trên máy tính. Điện thoại, Safari và Firefox không nạp được.</span></li>
+      <li><span data-l="en">Connect the device with a USB-C cable that carries data.</span>
+        <span data-l="vi">Cắm thiết bị vào máy tính bằng cáp USB-C có truyền dữ liệu.</span></li>
+      <li><span data-l="en">Click the button, choose the port named <code>USB JTAG/serial</code> or <code>ESP32-S3</code>, then <i>Install</i>.</span>
+        <span data-l="vi">Bấm nút bên dưới, chọn cổng <code>USB JTAG/serial</code> hoặc <code>ESP32-S3</code>, rồi bấm <i>Install</i>.</span></li>
+      <li><span data-l="en">Wait about a minute. The device restarts and shows a pairing code.</span>
+        <span data-l="vi">Chờ khoảng 1 phút. Thiết bị tự khởi động lại và hiện mã ghép đôi.</span></li>
+    </ol>
+    <esp-web-install-button manifest="manifest.json">
+      <button slot="activate"><span data-l="en">Connect &amp; install</span><span data-l="vi">Kết nối và nạp firmware</span></button>
+      <span slot="unsupported" class="warn"><span data-l="en">This browser can't flash devices. Open this page in Chrome or Edge on a computer.</span>
+        <span data-l="vi">Trình duyệt này không nạp được. Hãy mở trang bằng Chrome hoặc Edge trên máy tính.</span></span>
+      <span slot="not-allowed" class="warn"><span data-l="en">Flashing needs a secure page: open it over https:// or from localhost.</span>
+        <span data-l="vi">Chỉ nạp được khi trang mở qua https:// hoặc localhost.</span></span>
+    </esp-web-install-button>
+  </section>
+
+  <div class="grid">
+    <section class="card">
+      <h2><span data-l="en">No port showing?</span><span data-l="vi">Không thấy cổng?</span></h2>
+      <ul>
+        <li><span data-l="en">Try another cable. Many are charge-only.</span><span data-l="vi">Thử cáp khác, nhiều cáp chỉ để sạc.</span></li>
+        <li><span data-l="en">Hold <b>BOOT</b> on the ESP32-S3, plug the cable in, release, then click again.</span>
+          <span data-l="vi">Giữ nút <b>BOOT</b> trên mạch ESP32-S3, cắm cáp, thả nút, rồi bấm nạp lại.</span></li>
+        <li><span data-l="en">The first install erases the device, so pair it with the app again afterwards.</span>
+          <span data-l="vi">Lần nạp đầu xoá sạch thiết bị, sau đó phải ghép đôi lại với app.</span></li>
+      </ul>
+    </section>
+    <section class="card">
+      <h2><span data-l="en">After flashing</span><span data-l="vi">Sau khi nạp</span></h2>
+      <ul>
+        <li><span data-l="en">Install the VieLine Android app from the release page.</span><span data-l="vi">Cài app VieLine cho Android từ trang phát hành.</span></li>
+        <li><span data-l="en">Tap <b>Start</b> and enter the 6-digit code shown on the device.</span><span data-l="vi">Bấm <b>Bắt đầu</b> và nhập mã 6 số hiện trên thiết bị.</span></li>
+        <li><span data-l="en">Later versions arrive through the app (Device → Check for updates) and only install if signed by VieLine.</span>
+          <span data-l="vi">Các bản sau cập nhật qua app (Thiết bị → Kiểm tra và cập nhật), chỉ cài khi có chữ ký của VieLine.</span></li>
+      </ul>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="bar">
+    <p><span data-l="en">VieLine firmware is free for personal, non-commercial use. See LICENSE.md and THIRD_PARTY_NOTICES.md.</span>
+      <span data-l="vi">Firmware VieLine miễn phí cho mục đích cá nhân, phi thương mại. Xem LICENSE.md và THIRD_PARTY_NOTICES.md.</span></p>
+    <p><span data-l="en">Flashing powered by</span><span data-l="vi">Công cụ nạp dùng</span> <a href="https://github.com/esphome/esp-web-tools">ESP Web Tools</a> (Apache-2.0).</p>
+  </div>
+</footer>
+<script>
+  (function () {
+    var root = document.documentElement;
+    function set(l, save) {
+      root.dataset.lang = l; root.lang = l;
+      document.title = l === 'vi' ? 'VieLine · Nạp firmware' : 'VieLine · Flash firmware';
+      document.querySelectorAll('.lang button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.set === l)); });
+      if (save) { try { localStorage.setItem('vl-lang', l); } catch (e) {} }
+    }
+    document.querySelectorAll('.lang button').forEach(function (b) { b.onclick = function () { set(b.dataset.set, true); }; });
+    set(root.dataset.lang, false);
+    fetch('manifest.json').then(function (r) { return r.json(); }).then(function (m) {
+      document.getElementById('ver').textContent = 'v' + m.version + ' · ESP32-S3 · 4 MB';
+    }).catch(function () {});
+  })();
+</script>
+</body>
+</html>

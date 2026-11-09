@@ -30,7 +30,7 @@ VieLine is a round 1.28″ turn-by-turn display for motorbikes. Your Android pho
   <img src="assets/img/store/en-01-hero.webp" width="190" alt=""> <img src="assets/img/store/en-02-screens.webp" width="190" alt=""> <img src="assets/img/store/en-04-search.webp" width="190" alt=""> <img src="assets/img/store/en-05-pick.webp" width="190" alt="">
 </p>
 
-> **Status:** public preview v0.1.0. The firmware builds and the app runs on Android; validation on real hardware is in progress. Please report anything you find in [Issues](https://github.com/h2n07/VieLine/issues).
+> **Status:** public preview v0.2.0. The firmware builds and the app runs on Android; validation on real hardware is in progress. Please report anything you find in [Issues](https://github.com/h2n07/VieLine/issues).
 
 ### What's in this repository
 | Path | Contents |
@@ -63,7 +63,7 @@ VieLine là màn hình dẫn đường tròn 1.28″ gắn ghi-đông xe máy. �
   <img src="assets/img/store/vi-01-hero.webp" width="190" alt=""> <img src="assets/img/store/vi-02-screens.webp" width="190" alt=""> <img src="assets/img/store/vi-04-search.webp" width="190" alt=""> <img src="assets/img/store/vi-05-pick.webp" width="190" alt="">
 </p>
 
-> **Trạng thái:** bản xem trước v0.1.0. Firmware đã build xong, app đã chạy trên Android; đang thử trên phần cứng thật. Gặp lỗi hãy báo ở [Issues](https://github.com/h2n07/VieLine/issues).
+> **Trạng thái:** bản xem trước v0.2.0. Firmware đã build xong, app đã chạy trên Android; đang thử trên phần cứng thật. Gặp lỗi hãy báo ở [Issues](https://github.com/h2n07/VieLine/issues).
 
 ### Trong kho này có gì
 | Đường dẫn | Nội dung |

@@ -1,13 +1,13 @@
 {
   "name": "VieLine",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "new_install_prompt_erase": true,
   "builds": [
     {
       "chipFamily": "ESP32-S3",
       "parts": [
         {
-          "path": "vieline_0.1.0_full.bin",
+          "path": "vieline_0.2.0_full.bin",
           "offset": 0
         }
       ]

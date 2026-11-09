@@ -12,6 +12,7 @@
   function setLang(l, save) {
     if (l !== 'en' && l !== 'vi') return;
     root.dataset.lang = l;
+    document.querySelectorAll('video').forEach(function (v) { v.pause(); });   // đổi ngôn ngữ: dừng phim đang chạy
     root.lang = l;
     document.title = META[l].title;
     document.querySelector('meta[name="description"]').content = META[l].desc;
